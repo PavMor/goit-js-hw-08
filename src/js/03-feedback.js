@@ -1,31 +1,33 @@
 import throttle from 'lodash.throttle';
 
-const LOCALSTORAGE_KEY = 'feedback-form-state';
-const form = document.querySelector('form');
 let formData = {};
-const ls = localStorage;
 
-// to receive data from input
+const refs = {
+  form: document.querySelector('.feedback-form'),
+  button: document.querySelector('button'),
+};
 
-form.addEventListener('input', throttle(onFormInput, 500));
-form.addEventListener('submit', onFormSubmit);
+refs.form.addEventListener('input', throttle(onTextInput, 500));
+refs.form.addEventListener('submit', onFormSubmit);
 
-function onFormInput(e) {
-  //   e.preventDefault();
-  formData[e.target.name] = e.target.value;
-  ls.setItem('formData', JSON.stringify(formData));
-  if (ls.getItem('formData')) {
-    formData = JSON.parse(ls.getItem('formData'));
-    for (let key in formData) {
-      form.elements[key].value = formData[key];
-    }
-  }
-}
+fillinInputArea();
 
 function onFormSubmit(e) {
   e.preventDefault();
+  console.log('Submitting form');
+  e.target.reset();
+}
 
-  console.log('Submitting Form');
-  e.currentTarget.reset();
-  ls.removeItem('formData');
+function onTextInput(e) {
+  formData[e.target.name] = e.target.value;
+  //   console.log(formData);
+  localStorage.setItem('formData', JSON.stringify(formData));
+}
+
+function fillinInputArea() {
+  const savedMassage = localStorage.getItem('formData');
+  if (savedMassage) {
+    console.log(savedMassage);
+    refs.form.value = savedMassage;
+  }
 }
