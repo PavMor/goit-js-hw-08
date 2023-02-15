@@ -1,6 +1,7 @@
 import throttle from 'lodash.throttle';
 
 let formData = {};
+const STORAGE_KEY = 'feedback-form-state';
 
 const refs = {
   form: document.querySelector('.feedback-form'),
@@ -14,20 +15,23 @@ fillinInputArea();
 
 function onFormSubmit(e) {
   e.preventDefault();
-  console.log('Submitting form');
+  console.log(JSON.parse(localStorage.getItem(STORAGE_KEY)));
   e.target.reset();
+  localStorage.removeItem(STORAGE_KEY);
 }
 
 function onTextInput(e) {
   formData[e.target.name] = e.target.value;
-  //   console.log(formData);
-  localStorage.setItem('formData', JSON.stringify(formData));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
 }
 
 function fillinInputArea() {
-  const savedMassage = localStorage.getItem('formData');
+  const savedMassage = JSON.parse(localStorage.getItem(STORAGE_KEY));
   if (savedMassage) {
-    console.log(savedMassage);
-    refs.form.value = savedMassage;
+    const formKeys = Object.keys(savedMassage);
+    formKeys.map(element => {
+      document.querySelector(`[name='${element}]`).value =
+        savedMassage[element];
+    });
   }
 }
