@@ -18,6 +18,7 @@ function onFormSubmit(e) {
   console.log(JSON.parse(localStorage.getItem(STORAGE_KEY)));
   e.target.reset();
   localStorage.removeItem(STORAGE_KEY);
+  console.log(STORAGE_KEY);
 }
 
 function onTextInput(e) {
@@ -30,7 +31,7 @@ function fillinInputArea() {
   if (savedMassage) {
     const formKeys = Object.keys(savedMassage);
     formKeys.map(element => {
-      document.querySelector(`[name='${element}]`).value =
+      document.querySelector(`[name='${element}']`).value =
         savedMassage[element];
     });
   }
